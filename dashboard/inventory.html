@@ -19,8 +19,8 @@
     <!-- Page Header -->
     <div class="page-header">
       <div class="page-header-left">
-        <h1 class="page-title">Quản Lý Kho Dược & Vật Tư Y Tế</h1>
-        <p class="page-subtitle">Kiểm soát tồn kho dược phẩm, theo dõi hạn dùng và cảnh báo hàng sắp hết</p>
+        <h1 class="page-title">Quản Lý Kho Dược &amp; Vật Tư Y Tế</h1>
+        <p class="page-subtitle">Kiểm soát 112 danh mục dược phẩm &amp; vật tư y tế, theo dõi hạn dùng và cảnh báo hàng sắp hết</p>
       </div>
       <div class="page-header-actions">
         <button class="btn btn-outline" id="btnExportInventory">📥 Xuất File Kiểm Kho</button>
@@ -33,8 +33,8 @@
       <div class="kpi-card" style="--kpi-color: #0f766e; --kpi-bg: rgba(15,118,110,0.1);">
         <div class="kpi-icon-wrap">💊</div>
         <div class="kpi-info">
-          <div class="kpi-label">Tổng Danh Mục Thuốc & Vật Tư</div>
-          <div class="kpi-value" id="kpiTotalItems">10</div>
+          <div class="kpi-label">Tổng Danh Mục Thuốc &amp; Vật Tư</div>
+          <div class="kpi-value" id="kpiTotalItems">112</div>
           <div class="kpi-delta up">Đang lưu hành tại trung tâm</div>
         </div>
       </div>
@@ -114,6 +114,12 @@
             <!-- Rendered by JS -->
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-wrap">
+        <div id="invPaginationInfo">Hiển thị 1 – 10 trên tổng số 112 mặt hàng</div>
+        <div class="pagination" id="invPaginationControls"></div>
       </div>
     </div>
 

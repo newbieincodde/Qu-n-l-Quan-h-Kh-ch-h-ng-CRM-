@@ -6,6 +6,8 @@
 
 let allInventory = [];
 let filteredInventory = [];
+let currentInvPage = 1;
+const INV_PAGE_SIZE = 10;
 
 function initInventoryPage() {
   allInventory = typeof getInventory === 'function' ? getInventory() : [];
@@ -97,6 +99,7 @@ function applyInventoryFilters() {
     return matchSearch && matchCat && matchStat;
   });
 
+  currentInvPage = 1;
   renderInventoryTable();
 }
 
@@ -112,10 +115,14 @@ function renderInventoryTable() {
         </td>
       </tr>
     `;
+    renderInvPagination();
     return;
   }
 
-  tbody.innerHTML = filteredInventory.map(item => {
+  const startIdx = (currentInvPage - 1) * INV_PAGE_SIZE;
+  const pagedItems = filteredInventory.slice(startIdx, startIdx + INV_PAGE_SIZE);
+
+  tbody.innerHTML = pagedItems.map(item => {
     const isLow = item.stock <= item.minStock;
     const statusBadge = isLow
       ? `<span class="badge-status" style="background:#fee2e2; color:#dc2626;">⚠️ Sắp hết (${item.stock}/${item.minStock})</span>`
@@ -157,6 +164,50 @@ function renderInventoryTable() {
       </tr>
     `;
   }).join('');
+
+  renderInvPagination();
+}
+
+function renderInvPagination() {
+  const total = filteredInventory.length;
+  const totalPages = Math.ceil(total / INV_PAGE_SIZE) || 1;
+  const start = total === 0 ? 0 : (currentInvPage - 1) * INV_PAGE_SIZE + 1;
+  const end = Math.min(currentInvPage * INV_PAGE_SIZE, total);
+
+  const infoEl = document.getElementById('invPaginationInfo');
+  if (infoEl) {
+    infoEl.textContent = `Hiển thị ${start} – ${end} trên tổng số ${total} mặt hàng`;
+  }
+
+  const controls = document.getElementById('invPaginationControls');
+  if (!controls) return;
+
+  let btnsHtml = `
+    <button class="page-btn" ${currentInvPage === 1 ? 'disabled' : ''} onclick="goToInvPage(${currentInvPage - 1})">‹</button>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentInvPage - 1 && i <= currentInvPage + 1)) {
+      btnsHtml += `
+        <button class="page-btn ${i === currentInvPage ? 'active' : ''}" onclick="goToInvPage(${i})">${i}</button>
+      `;
+    } else if (i === currentInvPage - 2 || i === currentInvPage + 2) {
+      btnsHtml += `<span style="padding:0 4px; color:#94a3b8;">…</span>`;
+    }
+  }
+
+  btnsHtml += `
+    <button class="page-btn" ${currentInvPage === totalPages ? 'disabled' : ''} onclick="goToInvPage(${currentInvPage + 1})">›</button>
+  `;
+
+  controls.innerHTML = btnsHtml;
+}
+
+function goToInvPage(page) {
+  const totalPages = Math.ceil(filteredInventory.length / INV_PAGE_SIZE) || 1;
+  if (page < 1 || page > totalPages) return;
+  currentInvPage = page;
+  renderInventoryTable();
 }
 
 function adjustStock(id, delta) {
@@ -301,3 +352,4 @@ function setupExportInventory() {
 window.adjustStock = adjustStock;
 window.openMedModalForEdit = openMedModalForEdit;
 window.deleteMedItem = deleteMedItem;
+window.goToInvPage = goToInvPage;

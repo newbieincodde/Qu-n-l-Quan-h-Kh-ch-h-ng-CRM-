@@ -441,22 +441,157 @@ function generateSurveys(n = 20) {
   });
 }
 
-// ── INVENTORY (Kho Dược & Vật tư Y tế) ──
-const SAMPLE_MEDICINES = [
-  { id: 'MED001', name: 'Paracetamol 500mg', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 150, minStock: 30, price: 65000, expiry: '12/2027', status: 'normal' },
-  { id: 'MED002', name: 'Amoxicillin 500mg', category: 'Kháng sinh', unit: 'Hộp', stock: 85, minStock: 25, price: 120000, expiry: '08/2026', status: 'normal' },
-  { id: 'MED003', name: 'Bộ Kit Test Đường Huyết Accu-Chek', category: 'Vật tư chẩn đoán', unit: 'Bộ', stock: 12, minStock: 15, price: 380000, expiry: '06/2027', status: 'low' },
-  { id: 'MED004', name: 'Băng Gạc Vô Trùng Y Tế 10x10', category: 'Vật tư tiêu hao', unit: 'Gói', stock: 320, minStock: 50, price: 25000, expiry: '10/2028', status: 'normal' },
-  { id: 'MED005', name: 'Cồn Y Tế 70 Độ (Chai 500ml)', category: 'Sát khuẩn', unit: 'Chai', stock: 60, minStock: 20, price: 35000, expiry: '01/2027', status: 'normal' },
-  { id: 'MED006', name: 'Khẩu Trang Y Tế 4 Lớp Kháng Khuẩn', category: 'Bảo hộ y tế', unit: 'Hộp', stock: 8, minStock: 20, price: 45000, expiry: '05/2028', status: 'low' },
-  { id: 'MED007', name: 'Omega-3 Dầu Cá Tinh Khiết', category: 'Thực phẩm bổ sung', unit: 'Lọ', stock: 45, minStock: 15, price: 280000, expiry: '09/2026', status: 'normal' },
-  { id: 'MED008', name: 'Găng Tay Cao Su Khám Bệnh (Size M)', category: 'Vật tư tiêu hao', unit: 'Hộp', stock: 95, minStock: 30, price: 95000, expiry: '11/2027', status: 'normal' },
-  { id: 'MED009', name: 'Thuốc Nhỏ Mắt Kháng Viêm Tobradex', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 22, minStock: 10, price: 110000, expiry: '04/2026', status: 'normal' },
-  { id: 'MED010', name: 'Bộ Dụng Cụ Nha Khoa Dùng 1 Lần', category: 'Vật tư nha khoa', unit: 'Bộ', stock: 5, minStock: 15, price: 85000, expiry: '12/2026', status: 'low' }
+// ── INVENTORY (Kho Dược & Vật tư Y tế - 112 Danh Mục Bệnh Viện) ──
+const SAMPLE_MEDICINES_DATA = [
+  // 1. Thuốc Hạ Sốt, Giảm Đau & Kháng Viêm (10)
+  { name: 'Paracetamol 500mg Domesco', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 150, minStock: 30, price: 65000, expiry: '12/2027' },
+  { name: 'Panadol Extra Đỏ 500mg/65mg', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 120, minStock: 25, price: 185000, expiry: '10/2027' },
+  { name: 'Efferalgan Sủi 500mg UPSA', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 18, minStock: 20, price: 75000, expiry: '06/2027' },
+  { name: 'Hapacol 250mg Gói Bột Trẻ Em', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 65, minStock: 15, price: 52000, expiry: '09/2027' },
+  { name: 'Ibuprofen 400mg Kháng Viêm Giảm Đau', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 80, minStock: 20, price: 95000, expiry: '08/2026' },
+  { name: 'Celecoxib 200mg Celebrex Pfizer', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 42, minStock: 15, price: 320000, expiry: '11/2027' },
+  { name: 'Meloxicam 7.5mg Mobic Boehringer', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 35, minStock: 10, price: 145000, expiry: '07/2027' },
+  { name: 'Diclofenac 50mg Voltaren Novartis', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 12, minStock: 15, price: 160000, expiry: '05/2026' },
+  { name: 'Tramadol + Paracetamol Ultracet', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 25, minStock: 10, price: 210000, expiry: '04/2027' },
+  { name: 'Miếng Dán Giảm Đau Salonpas Pain Relief', category: 'Thuốc hạ sốt, giảm đau', unit: 'Hộp', stock: 95, minStock: 20, price: 45000, expiry: '12/2028' },
+
+  // 2. Thuốc Tim Mạch, Huyết Áp & Mỡ Máu (12)
+  { name: 'Amlodipine 5mg Norvasc Pfizer', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 90, minStock: 25, price: 195000, expiry: '08/2027' },
+  { name: 'Losartan Potassium 50mg Cozaar', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 75, minStock: 20, price: 240000, expiry: '09/2027' },
+  { name: 'Telmisartan 40mg Micardis Boehringer', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 14, minStock: 20, price: 290000, expiry: '03/2026' },
+  { name: 'Bisoprolol Fumarate 5mg Concor Merck', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 60, minStock: 15, price: 180000, expiry: '10/2027' },
+  { name: 'Atorvastatin 20mg Lipitor Pfizer', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 85, minStock: 20, price: 380000, expiry: '11/2027' },
+  { name: 'Rosuvastatin 10mg Crestor AstraZeneca', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 55, minStock: 15, price: 420000, expiry: '01/2028' },
+  { name: 'Clopidogrel 75mg Plavix Sanofi', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 40, minStock: 15, price: 450000, expiry: '06/2027' },
+  { name: 'Aspirin 81mg Bayer Tim Mạch', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 110, minStock: 30, price: 95000, expiry: '02/2028' },
+  { name: 'Perindopril 5mg Coversyl Servier', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 50, minStock: 15, price: 230000, expiry: '09/2027' },
+  { name: 'Fenofibrate 200mg Lipanthyl Abbott', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 12, minStock: 15, price: 260000, expiry: '04/2026' },
+  { name: 'Nebivolol 5mg Nebilet Menarini', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 30, minStock: 10, price: 215000, expiry: '07/2027' },
+  { name: 'Trimetazidine MR 35mg Vastarel Servier', category: 'Thuốc tim mạch, huyết áp', unit: 'Hộp', stock: 65, minStock: 15, price: 280000, expiry: '12/2027' },
+
+  // 3. Kháng Sinh & Kháng Khuẩn (10)
+  { name: 'Amoxicillin 500mg Domesco', category: 'Kháng sinh', unit: 'Hộp', stock: 85, minStock: 25, price: 120000, expiry: '08/2026' },
+  { name: 'Augmentin 1g GSK (Amoxicillin/Clavulanate)', category: 'Kháng sinh', unit: 'Hộp', stock: 70, minStock: 20, price: 275000, expiry: '11/2027' },
+  { name: 'Cefuroxime Axetil 500mg Zinnat GSK', category: 'Kháng sinh', unit: 'Hộp', stock: 95, minStock: 20, price: 245000, expiry: '10/2027' },
+  { name: 'Cefixime 200mg Cefimark', category: 'Kháng sinh', unit: 'Hộp', stock: 15, minStock: 20, price: 165000, expiry: '05/2026' },
+  { name: 'Azithromycin 500mg Zithromax Pfizer', category: 'Kháng sinh', unit: 'Hộp', stock: 50, minStock: 15, price: 155000, expiry: '12/2027' },
+  { name: 'Ciprofloxacin 500mg Ciprobay Bayer', category: 'Kháng sinh', unit: 'Hộp', stock: 45, minStock: 15, price: 190000, expiry: '09/2027' },
+  { name: 'Levofloxacin 500mg Cravit Daiichi Sankyo', category: 'Kháng sinh', unit: 'Hộp', stock: 10, minStock: 15, price: 210000, expiry: '04/2026' },
+  { name: 'Metronidazole 250mg Kháng Khuẩn Kỵ Khí', category: 'Kháng sinh', unit: 'Hộp', stock: 80, minStock: 20, price: 60000, expiry: '01/2028' },
+  { name: 'Clarithromycin 500mg Klacid Abbott', category: 'Kháng sinh', unit: 'Hộp', stock: 35, minStock: 10, price: 340000, expiry: '07/2027' },
+  { name: 'Hỗn Dịch Uống Klamentin 250mg Cho Trẻ', category: 'Kháng sinh', unit: 'Hộp', stock: 40, minStock: 15, price: 115000, expiry: '06/2027' },
+
+  // 4. Thuốc Tiêu Hóa, Dạ Dày & Gan Mật (10)
+  { name: 'Nexium Mups 40mg Esomeprazole AstraZeneca', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 65, minStock: 20, price: 480000, expiry: '08/2027' },
+  { name: 'Pantoprazole 40mg Pantoloc Takeda', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 50, minStock: 15, price: 290000, expiry: '09/2027' },
+  { name: 'Omeprazole 20mg Domesco', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 110, minStock: 25, price: 65000, expiry: '11/2027' },
+  { name: 'Mosapride Citrate 5mg Gasmotin', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 75, minStock: 15, price: 350000, expiry: '12/2027' },
+  { name: 'Thuốc Dạ Dày Chữ Y Yumangel Yuhan', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 90, minStock: 20, price: 110000, expiry: '05/2028' },
+  { name: 'Phosphalugel Gel Nhôm Phosphat Sanofi', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 105, minStock: 25, price: 135000, expiry: '04/2028' },
+  { name: 'Domperidone 10mg Motilium-M Janssen', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 8, minStock: 20, price: 190000, expiry: '06/2026' },
+  { name: 'Men Tiêu Hóa Enterogermina 2 Tỷ Bào Tử', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 70, minStock: 20, price: 185000, expiry: '10/2027' },
+  { name: 'Bổ Gan Silymarin 140mg Legalon Madaus', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 45, minStock: 15, price: 280000, expiry: '07/2027' },
+  { name: 'Thuốc Bổ Gan Hepa-Merz 5g Merz Pharma', category: 'Thuốc tiêu hóa, dạ dày', unit: 'Hộp', stock: 32, minStock: 10, price: 360000, expiry: '09/2027' },
+
+  // 5. Thuốc Nội Tiết, Tiểu Đường & Tuyến Giáp (8)
+  { name: 'Metformin HCl 850mg Glucophage Merck', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 120, minStock: 25, price: 125000, expiry: '10/2027' },
+  { name: 'Gliclazide MR 60mg Diamicron MR Servier', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 80, minStock: 20, price: 290000, expiry: '12/2027' },
+  { name: 'Sitagliptin 100mg Januvia MSD', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 40, minStock: 15, price: 580000, expiry: '08/2027' },
+  { name: 'Dapagliflozin 10mg Forxiga AstraZeneca', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 35, minStock: 15, price: 650000, expiry: '11/2027' },
+  { name: 'Bút Tiêm Insulin Novorapid Flexpen 100U/ml', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 14, minStock: 15, price: 850000, expiry: '04/2026' },
+  { name: 'Kim Tiêm Bút Tiểu Đường BD Ultra-Fine 4mm', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 55, minStock: 15, price: 320000, expiry: '03/2028' },
+  { name: 'Levothyroxine 50mcg Berlthyrox Menarini', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 65, minStock: 15, price: 110000, expiry: '09/2027' },
+  { name: 'Thiamazole 5mg Thyrozol Merck Trị Bướu Giáp', category: 'Thuốc nội tiết, tiểu đường', unit: 'Hộp', stock: 9, minStock: 15, price: 210000, expiry: '05/2026' },
+
+  // 6. Thuốc Hô Hấp, Tai Mũi Họng & Dị Ứng (10)
+  { name: 'Acemuc 200mg Acetylcysteine Sanofi', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 95, minStock: 20, price: 95000, expiry: '10/2027' },
+  { name: 'Bromhexin 8mg Bisolvon Sanofi', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 60, minStock: 15, price: 75000, expiry: '08/2027' },
+  { name: 'Bình Xịt Hen Seretide Evohaler 25/125mcg', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 22, minStock: 10, price: 390000, expiry: '07/2027' },
+  { name: 'Xịt Giãn Phế Quản Ventolin Inhaler 100mcg', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 45, minStock: 15, price: 125000, expiry: '11/2027' },
+  { name: 'Fexofenadine 180mg Telfast Sanofi', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 75, minStock: 20, price: 115000, expiry: '12/2027' },
+  { name: 'Desloratadine 5mg Aerius MSD', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 50, minStock: 15, price: 130000, expiry: '09/2027' },
+  { name: 'Cetirizine 10mg Zyrtec UCB Pharma', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Hộp', stock: 8, minStock: 15, price: 85000, expiry: '06/2026' },
+  { name: 'Thuốc Xịt Mũi Flixonase 0.05% GSK', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Chai', stock: 35, minStock: 10, price: 220000, expiry: '08/2027' },
+  { name: 'Xịt Mũi Xoang Thảo Dược Xoangspray', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Chai', stock: 65, minStock: 15, price: 68000, expiry: '03/2028' },
+  { name: 'Nước Súc Họng Kháng Khuẩn Betadine Gargle 1%', category: 'Thuốc hô hấp, tai mũi họng', unit: 'Chai', stock: 50, minStock: 15, price: 82000, expiry: '01/2028' },
+
+  // 7. Thuốc Da Liễu & Bôi Ngoài Da (8)
+  { name: 'Betamethasone Dipropionate 0.05% Diproson', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 70, minStock: 20, price: 45000, expiry: '08/2027' },
+  { name: 'Thuốc Mỡ Silkron Trị Nấm Chàm Dongkwang', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 85, minStock: 20, price: 35000, expiry: '09/2027' },
+  { name: 'Kháng Sinh Bôi Ngoài Da Fucidin 2% LEO', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 30, minStock: 10, price: 95000, expiry: '07/2027' },
+  { name: 'Kem Chống Hăm Phục Hồi Da Bepanthen Balm', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 45, minStock: 15, price: 75000, expiry: '11/2027' },
+  { name: 'Trị Nấm Canesten Clotrimazole 1% Bayer', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 12, minStock: 15, price: 65000, expiry: '05/2026' },
+  { name: 'Gel Trị Mụn Klenzit-C Adapalene/Clindamycin', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 38, minStock: 10, price: 145000, expiry: '12/2027' },
+  { name: 'Kem Dưỡng Ẩm Da Liễu Cetaphil 100g', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 50, minStock: 15, price: 195000, expiry: '04/2028' },
+  { name: 'Kem Bôi Dị Ứng Phenergan 2% Sanofi', category: 'Thuốc da liễu', unit: 'Tuýp', stock: 7, minStock: 15, price: 28000, expiry: '04/2026' },
+
+  // 8. Chuyên Khoa Mắt (8)
+  { name: 'Systane Ultra Nước Mắt Nhân Tạo Alcon 10ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 65, minStock: 20, price: 115000, expiry: '08/2027' },
+  { name: 'Tobradex Nhỏ Mắt Kháng Viêm Alcon 5ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 22, minStock: 10, price: 65000, expiry: '04/2026' },
+  { name: 'Tobrex Nhỏ Mắt Kháng Khuẩn 0.3% Alcon 5ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 40, minStock: 15, price: 55000, expiry: '09/2027' },
+  { name: 'Sanlein 0.1 Natri Hyaluronate Santen 5ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 55, minStock: 15, price: 85000, expiry: '10/2027' },
+  { name: 'Dung Dịch Nhỏ Mắt V.Rohto New Vitamin 13ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 90, minStock: 25, price: 58000, expiry: '02/2028' },
+  { name: 'Cravit 0.5% Levofloxacin Nhỏ Mắt Santen 5ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 11, minStock: 15, price: 110000, expiry: '05/2026' },
+  { name: 'Thuốc Nhỏ Mắt Vigamox 0.5% Moxifloxacin 5ml', category: 'Chuyên khoa mắt', unit: 'Lọ', stock: 28, minStock: 10, price: 145000, expiry: '12/2027' },
+  { name: 'Nước Rửa Mắt Eyelotion Sát Khuẩn Nhẹ 100ml', category: 'Chuyên khoa mắt', unit: 'Chai', stock: 45, minStock: 15, price: 42000, expiry: '06/2028' },
+
+  // 9. Vật Tư Tiêu Hao Y Tế (14)
+  { name: 'Băng Gạc Vô Trùng Y Tế 10x10cm (10 miếng)', category: 'Vật tư tiêu hao', unit: 'Gói', stock: 320, minStock: 50, price: 25000, expiry: '10/2028' },
+  { name: 'Gạc Cuộn Y Tế Hút Nước 0.1x2m', category: 'Vật tư tiêu hao', unit: 'Cuộn', stock: 210, minStock: 40, price: 15000, expiry: '12/2028' },
+  { name: 'Băng Keo Lụa Cuộn Urgopore 1.25cm x 5m', category: 'Vật tư tiêu hao', unit: 'Cuộn', stock: 140, minStock: 30, price: 32000, expiry: '05/2029' },
+  { name: 'Găng Tay Cao Su Khám Bệnh Size M (100 chiếc)', category: 'Vật tư tiêu hao', unit: 'Hộp', stock: 95, minStock: 30, price: 95000, expiry: '11/2027' },
+  { name: 'Găng Tay Phẫu Thuật Vô Trùng Đã Tiệt Trùng', category: 'Vật tư tiêu hao', unit: 'Đôi', stock: 150, minStock: 40, price: 18000, expiry: '08/2028' },
+  { name: 'Khẩu Trang Y Tế 4 Lớp Kháng Khuẩn (50 cái)', category: 'Vật tư tiêu hao', unit: 'Hộp', stock: 12, minStock: 25, price: 45000, expiry: '05/2028' },
+  { name: 'Bơm Kim Tiêm Vinahankook 5ml (100 cái)', category: 'Vật tư tiêu hao', unit: 'Hộp', stock: 110, minStock: 30, price: 120000, expiry: '09/2028' },
+  { name: 'Bơm Kim Tiêm Nhựa Vinahankook 10ml (100 cái)', category: 'Vật tư tiêu hao', unit: 'Hộp', stock: 85, minStock: 25, price: 140000, expiry: '07/2028' },
+  { name: 'Dây Truyền Dịch Y Tế Có Khóa Chỉnh Giọt', category: 'Vật tư tiêu hao', unit: 'Bộ', stock: 130, minStock: 35, price: 18000, expiry: '03/2029' },
+  { name: 'Kim Luồn Tĩnh Mạch BD Angiocath 22G Xanh', category: 'Vật tư tiêu hao', unit: 'Cái', stock: 160, minStock: 40, price: 22000, expiry: '06/2028' },
+  { name: 'Bông Gòn Y Tế Thấm Nước Bạch Tuyết 500g', category: 'Vật tư tiêu hao', unit: 'Gói', stock: 75, minStock: 20, price: 68000, expiry: '12/2028' },
+  { name: 'Cồn Đỏ Sát Khuẩn Povidine Iodine 10% 100ml', category: 'Vật tư tiêu hao', unit: 'Chai', stock: 90, minStock: 25, price: 22000, expiry: '04/2028' },
+  { name: 'Cồn Y Tế Trắng 70 Độ Sát Khuẩn Chai 500ml', category: 'Vật tư tiêu hao', unit: 'Chai', stock: 60, minStock: 20, price: 35000, expiry: '01/2027' },
+  { name: 'Nước Muối Sinh Lý Natri Clorid 0.9% Chai 500ml', category: 'Vật tư tiêu hao', unit: 'Chai', stock: 200, minStock: 50, price: 12000, expiry: '08/2028' },
+
+  // 10. Vật Tư Chẩn Đoán & Xét Nghiệm (8)
+  { name: 'Bộ Kit Test Đường Huyết Accu-Chek Instant', category: 'Vật tư chẩn đoán', unit: 'Bộ', stock: 12, minStock: 15, price: 380000, expiry: '06/2027' },
+  { name: 'Que Thử Đường Huyết Accu-Chek (50 que)', category: 'Vật tư chẩn đoán', unit: 'Hộp', stock: 35, minStock: 15, price: 340000, expiry: '09/2027' },
+  { name: 'Que Test Nhanh Kháng Nguyên Cúm A/B (25 test)', category: 'Vật tư chẩn đoán', unit: 'Hộp', stock: 20, minStock: 10, price: 650000, expiry: '08/2027' },
+  { name: 'Kit Test Nhanh Sốt Xuất Huyết Dengue NS1', category: 'Vật tư chẩn đoán', unit: 'Hộp', stock: 9, minStock: 12, price: 850000, expiry: '05/2026' },
+  { name: 'Kit Test H.Pylori Dạ Dày Qua Hơi Thở C14', category: 'Vật tư chẩn đoán', unit: 'Bộ', stock: 25, minStock: 10, price: 550000, expiry: '11/2027' },
+  { name: 'Ống Nghiệm Chân Không Nắp Đỏ Clot (100 ống)', category: 'Vật tư chẩn đoán', unit: 'Hộp', stock: 45, minStock: 15, price: 140000, expiry: '12/2028' },
+  { name: 'Ống Nghiệm Chân Không Nắp Tím EDTA K2 (100 ống)', category: 'Vật tư chẩn đoán', unit: 'Hộp', stock: 40, minStock: 15, price: 145000, expiry: '12/2028' },
+  { name: 'Gel Siêu Âm Y Tế Trong Suốt Can 5 Lít', category: 'Vật tư chẩn đoán', unit: 'Can', stock: 18, minStock: 8, price: 220000, expiry: '07/2028' },
+
+  // 11. Vật Tư Nha Khoa (6)
+  { name: 'Bộ Dụng Cụ Nha Khoa Khám 1 Lần Tiệt Trùng', category: 'Vật tư nha khoa', unit: 'Bộ', stock: 5, minStock: 15, price: 85000, expiry: '12/2026' },
+  { name: 'Thuốc Tê Nha Khoa Lidocaine 2% Ống Tiêm', category: 'Vật tư nha khoa', unit: 'Hộp', stock: 24, minStock: 10, price: 380000, expiry: '09/2027' },
+  { name: 'Composite Trám Răng Thẩm Mỹ 3M Filtek Z250', category: 'Vật tư nha khoa', unit: 'Tuýp', stock: 15, minStock: 8, price: 450000, expiry: '11/2027' },
+  { name: 'Bột Thạch Cao Đổ Mẫu Răng Nha Khoa Túi 1kg', category: 'Vật tư nha khoa', unit: 'Túi', stock: 30, minStock: 10, price: 85000, expiry: '10/2028' },
+  { name: 'Cao Su Lấy Dấu Răng Silagum Đức (2 tuýp)', category: 'Vật tư nha khoa', unit: 'Hộp', stock: 14, minStock: 8, price: 520000, expiry: '06/2027' },
+  { name: 'Chỉ Nha Khoa Oral-B Essential Floss 50m', category: 'Vật tư nha khoa', unit: 'Cuộn', stock: 65, minStock: 20, price: 48000, expiry: '01/2029' },
+
+  // 12. Thực Phẩm Bổ Sung & Vi Chất (8)
+  { name: 'Omega-3 Dầu Cá Tinh Khiết Alaska 1000mg', category: 'Thực phẩm bổ sung', unit: 'Lọ', stock: 45, minStock: 15, price: 280000, expiry: '09/2026' },
+  { name: 'Canxi Nano D3 & K2 Hỗ Trợ Xương Khớp', category: 'Thực phẩm bổ sung', unit: 'Hộp', stock: 55, minStock: 15, price: 185000, expiry: '11/2027' },
+  { name: 'Vitamin C 500mg Domesco Tăng Miễn Dịch', category: 'Thực phẩm bổ sung', unit: 'Hộp', stock: 90, minStock: 25, price: 75000, expiry: '08/2027' },
+  { name: 'Viên Sắt Ferrovit Bổ Máu Cho Phụ Nữ', category: 'Thực phẩm bổ sung', unit: 'Hộp', stock: 60, minStock: 15, price: 135000, expiry: '10/2027' },
+  { name: 'Men Vi Sinh BioGaia Protectis Thụy Điển 5ml', category: 'Thực phẩm bổ sung', unit: 'Lọ', stock: 16, minStock: 10, price: 415000, expiry: '04/2027' },
+  { name: 'Glucosamine Sulfate 1500mg Viartril-S Madaus', category: 'Thực phẩm bổ sung', unit: 'Hộp', stock: 28, minStock: 10, price: 590000, expiry: '07/2027' },
+  { name: 'Sữa Bột Y Tế Ensure Gold 850g Abbott', category: 'Thực phẩm bổ sung', unit: 'Lon', stock: 22, minStock: 10, price: 820000, expiry: '06/2027' },
+  { name: 'Viên Bổ Mắt Nutra-Vision Lutein & Zeaxanthin', category: 'Thực phẩm bổ sung', unit: 'Lọ', stock: 40, minStock: 15, price: 340000, expiry: '12/2027' }
 ];
 
 function generateInventory() {
-  return [...SAMPLE_MEDICINES];
+  return SAMPLE_MEDICINES_DATA.map((m, idx) => ({
+    id: `MED${String(idx + 1).padStart(3, '0')}`,
+    name: m.name,
+    category: m.category,
+    unit: m.unit,
+    stock: m.stock,
+    minStock: m.minStock,
+    price: m.price,
+    expiry: m.expiry,
+    status: m.stock <= m.minStock ? 'low' : 'normal'
+  }));
 }
 
 // ── INVOICES (Hóa Đơn & Thu Ngân Bán Hàng) ──
@@ -515,7 +650,8 @@ function initData(forceReset = false) {
   if (forceReset || !localStorage.getItem(SURVEYS_KEY)) {
     localStorage.setItem(SURVEYS_KEY, JSON.stringify(generateSurveys(20)));
   }
-  if (forceReset || !localStorage.getItem(INVENTORY_KEY)) {
+  // Tự động nâng cấp khi kho dược chưa đủ 100 danh mục thuốc
+  if (forceReset || !localStorage.getItem(INVENTORY_KEY) || getInventory().length < 100) {
     localStorage.setItem(INVENTORY_KEY, JSON.stringify(generateInventory()));
   }
   if (forceReset || !localStorage.getItem(INVOICES_KEY)) {
@@ -661,16 +797,19 @@ if (typeof window !== 'undefined') {
   window.generateInteractions      = generateInteractions;
   window.generatePatients          = generatePatients;
   window.generatePrescriptions     = generatePrescriptions;
+  window.generateInventory         = generateInventory;
 }
 
 if (typeof global !== 'undefined') {
   global.SERVICES                  = SERVICES;
   global.generatePatients          = generatePatients;
   global.generatePrescriptions     = generatePrescriptions;
+  global.generateInventory         = generateInventory;
   global.classifyPatient           = classifyPatient;
   global.getRankStats              = getRankStats;
   global.formatCurrency            = formatCurrency;
   global.getPatients               = getPatients;
   global.getPrescriptions          = getPrescriptions;
   global.getPrescriptionsByPatient = getPrescriptionsByPatient;
+  global.getInventory              = getInventory;
 }

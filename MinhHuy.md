@@ -7,13 +7,11 @@
 | Học phần | Thiết kế Web – Đại học Lạc Hồng (LHU) |
 | Công cụ trao đổi ý tưởng | ChatGPT |
 | Cập nhật | 23/11/2026 |
-
 ## 1. Xác định CRM cần giải quyết việc gì
 
 Tôi bắt đầu bằng câu hỏi liệu CRM có thể tập trung vào hai việc là **phân bổ khách hàng** và **chăm sóc khách hàng** hay không. ChatGPT giải thích rằng phân bổ là giao hồ sơ hoặc yêu cầu cho nhân viên phụ trách, còn chăm sóc là ghi lại nội dung trao đổi, phản hồi của khách và thời điểm cần liên hệ tiếp.
 
 Ví dụ ban đầu là một khách để lại số điện thoại, quản lý giao cho nhân viên tư vấn, nhân viên ghi lại yêu cầu báo giá và hẹn gọi lại vào thứ Sáu. Đến ngày hẹn, khách xuất hiện trong danh sách **Cần chăm sóc hôm nay**. Từ ví dụ đó, hai bên phác thảo ba màn hình gồm Trang chủ, Danh bạ và Form chăm sóc. ChatGPT cũng gợi ý giao người phụ trách thủ công trong bản demo để dễ trình bày toàn bộ quy trình.
-
 ## 2. Phương án 1 – CRM chăm sóc sau bán hàng
 
 Tôi đề xuất một website bán hàng có phần CRM để khách phản hồi về tình trạng sản phẩm hoặc yêu cầu đổi trả. Tôi dự kiến dùng họ tên, số điện thoại và địa chỉ để quản lý thông tin khách hàng. ChatGPT gợi ý áp dụng cho shop điện tử và phụ kiện, nơi có thể minh họa bằng các ca giao sai mẫu, sản phẩm bị lỗi hoặc đổi hàng.

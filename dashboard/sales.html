@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hóa Đơn & Thu Ngân — MedCare CRM</title>
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+  <div id="appMount">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1 class="page-title">Hóa Đơn & Quầy Thu Ngân Khám Bệnh</h1>
+        <p class="page-subtitle">Quản lý giao dịch viện phí, thanh toán gói khám y tế & xuất hóa đơn điện tử</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-outline" id="btnExportInvoices">📥 Xuất Báo Cáo Thu Ngân</button>
+        <button class="btn btn-primary" id="btnOpenNewInvoiceModal">➕ Lập Hóa Đơn Thu Viện Phí Mới</button>
+      </div>
+    </div>
+
+    <!-- 4 KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--kpi-color: #0f766e; --kpi-bg: rgba(15,118,110,0.1);">
+        <div class="kpi-icon-wrap">💵</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Tổng Doanh Số Đã Thu</div>
+          <div class="kpi-value" id="kpiSalesTotal">0 ₫</div>
+          <div class="kpi-delta up">Từ 20 hóa đơn khám bệnh</div>
+        </div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-color: #14b8a6; --kpi-bg: rgba(20,184,166,0.1);">
+        <div class="kpi-icon-wrap">🧾</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Tổng Số Hóa Đơn</div>
+          <div class="kpi-value" id="kpiInvoiceCount">20</div>
+          <div class="kpi-delta up">Phiếu thu hợp lệ</div>
+        </div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-color: #3b82f6; --kpi-bg: rgba(59,130,246,0.1);">
+        <div class="kpi-icon-wrap">📲</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Thanh Toán Chuyển Khoản / Thẻ</div>
+          <div class="kpi-value" id="kpiDigitalPercent">65%</div>
+          <div class="kpi-delta up">Không dùng tiền mặt</div>
+        </div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-color: #f59e0b; --kpi-bg: rgba(245,158,11,0.1);">
+        <div class="kpi-icon-wrap">⏳</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Chờ Quyết Toán</div>
+          <div class="kpi-value" id="kpiPendingCount">0</div>
+          <div class="kpi-delta down">Cần đối soát cuối ca</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoices Table Card -->
+    <div class="data-card">
+      <div class="data-card-header">
+        <div class="data-card-toolbar" style="width:100%; justify-content:space-between;">
+          <!-- Search box -->
+          <div class="search-input-wrap">
+            <span class="search-input-icon">🔍</span>
+            <input type="text" id="invoiceSearch" placeholder="Tìm theo mã HĐ, tên bệnh nhân, SĐT...">
+          </div>
+
+          <!-- Filters -->
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select class="filter-select" id="payMethodFilter">
+              <option value="all">Tất cả hình thức thanh toán</option>
+              <option value="Tiền mặt">💵 Tiền mặt</option>
+              <option value="Chuyển khoản QR">📱 Chuyển khoản QR</option>
+              <option value="Thẻ Visa/Master">💳 Thẻ Visa/Master</option>
+              <option value="Bảo hiểm Y tế">🏥 Bảo hiểm Y tế</option>
+            </select>
+
+            <select class="filter-select" id="invoiceStatusFilter">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="Đã thanh toán">Đã thanh toán</option>
+              <option value="Chờ thanh toán">Chờ thanh toán</option>
+            </select>
+
+            <button class="btn btn-outline btn-sm" id="btnResetInvoiceFilters">🔄 Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã Hóa Đơn</th>
+              <th>Bệnh Nhân</th>
+              <th>Số Điện Thoại</th>
+              <th>Dịch Vụ / Gói Khám</th>
+              <th>Tổng Tiền</th>
+              <th>Hình Thức</th>
+              <th>Trạng Thái</th>
+              <th>Thu Ngân</th>
+              <th>Ngày Lập</th>
+              <th>Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="invoicesTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal: Lập Hóa Đơn Mới -->
+  <div class="modal-backdrop" id="invoiceModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Lập Phiếu Thu Viện Phí Mới</h3>
+        <button class="modal-close" id="btnCloseInvoiceModal">✕</button>
+      </div>
+      <form id="invoiceForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Chọn Bệnh Nhân <span class="req">*</span></label>
+            <select class="form-control" id="invPatientSelect" required>
+              <!-- Filled by JS -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Dịch Vụ Y Tế / Gói Khám <span class="req">*</span></label>
+            <select class="form-control" id="invServiceSelect" required>
+              <!-- Filled by JS -->
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Số Tiền Thanh Toán (₫) <span class="req">*</span></label>
+              <input type="number" class="form-control" id="invAmount" min="50000" step="50000" value="1500000" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phương Thức Thanh Toán <span class="req">*</span></label>
+              <select class="form-control" id="invPaymentMethod" required>
+                <option value="Chuyển khoản QR">Chuyển khoản QR</option>
+                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="Thẻ Visa/Master">Thẻ Visa/Master</option>
+                <option value="Bảo hiểm Y tế">Bảo hiểm Y tế</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Trạng Thái Thanh Toán</label>
+            <select class="form-control" id="invStatus">
+              <option value="Đã thanh toán">Đã thanh toán (Hoàn tất)</option>
+              <option value="Chờ thanh toán">Chờ thanh toán (Tạm giữ phiếu)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelInvoice">Hủy</button>
+          <button type="submit" class="btn btn-primary">In & Lưu Hóa Đơn</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- VietQR Payment Modal -->
+  <div class="spotlight-backdrop" id="vietqrModal" style="align-items:center; padding-top:0;">
+    <div class="portal-modal-box" style="max-width:480px; text-align:center;">
+      <div class="portal-modal-header">
+        <h3 class="portal-modal-title">📲 Thanh Toán Viện Phí — VietQR</h3>
+        <button type="button" class="portal-modal-close" onclick="closeVietqrModal()">✕</button>
+      </div>
+      <div class="portal-modal-body" style="padding:24px;">
+        <div style="font-size:12px; color:#64748b; margin-bottom:4px;" id="qrHospitalName">TRUNG TÂM Y TẾ MEDCARE</div>
+        <div style="font-size:22px; font-weight:800; color:#0f766e; margin-bottom:8px;" id="qrAmountDisplay">1.500.000 ₫</div>
+        <div style="font-size:12.5px; color:#475569; margin-bottom:16px;">
+          Bệnh nhân: <strong id="qrPatientName">Nguyễn Văn An</strong> · HĐ: <strong id="qrInvoiceId">HD2026001</strong>
+        </div>
+
+        <!-- QR Box Mockup -->
+        <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:16px; padding:16px; display:inline-block; margin-bottom:16px;">
+          <svg width="180" height="180" viewBox="0 0 100 100" fill="#0f766e">
+            <rect x="5" y="5" width="28" height="28" fill="#0f766e" rx="4"/>
+            <rect x="9" y="9" width="20" height="20" fill="#ffffff" rx="2"/>
+            <rect x="13" y="13" width="12" height="12" fill="#0f766e"/>
+
+            <rect x="67" y="5" width="28" height="28" fill="#0f766e" rx="4"/>
+            <rect x="71" y="9" width="20" height="20" fill="#ffffff" rx="2"/>
+            <rect x="75" y="13" width="12" height="12" fill="#0f766e"/>
+
+            <rect x="5" y="67" width="28" height="28" fill="#0f766e" rx="4"/>
+            <rect x="9" y="71" width="20" height="20" fill="#ffffff" rx="2"/>
+            <rect x="13" y="75" width="12" height="12" fill="#0f766e"/>
+
+            <rect x="42" y="14" width="8" height="8"/>
+            <rect x="42" y="44" width="12" height="12"/>
+            <rect x="70" y="44" width="8" height="8"/>
+            <rect x="54" y="66" width="14" height="8"/>
+            <rect x="80" y="80" width="10" height="10"/>
+          </svg>
+          <div style="font-size:11px; font-weight:700; color:#0f766e; margin-top:6px;">QUÉT MÃ VIETQR QUA ỨNG DỤNG NGÂN HÀNG</div>
+        </div>
+
+        <div style="background:#f1f5f9; border-radius:10px; padding:12px; font-size:12px; color:#475569; text-align:left; margin-bottom:18px;">
+          <div>Ngân hàng: <strong>Vietcombank (Chi nhánh Đồng Nai)</strong></div>
+          <div>Số tài khoản: <strong style="font-family:monospace; color:#0f766e;">88992026888</strong></div>
+          <div>Chủ tài khoản: <strong>TRUNG TAM Y TE MEDCARE</strong></div>
+          <div>Nội dung CK: <strong style="font-family:monospace; color:#d97706;" id="qrTransferNote">MEDCARE HD2026001</strong></div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-outline" style="flex:1;" onclick="closeVietqrModal()">Đóng</button>
+          <button type="button" class="btn btn-primary" style="flex:2;" id="btnConfirmQrPaid">
+            ✓ Đã Nhận Tiền & Hoàn Tất
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app-shell.js"></script>
+  <script src="../js/sales.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAppShell('Hóa Đơn & Thu Ngân');
+      initSalesPage();
+    });
+  </script>
+</body>
+</html>

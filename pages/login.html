@@ -164,7 +164,7 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════════
-       RIGHT PANEL — MODERN INTERACTIVE AUTH FORM
+       RIGHT PANEL — CLEAN MINIMAL FORM (theo mẫu LoginForm)
        ══════════════════════════════════════════════════════════════════════════ -->
   <div class="auth-right">
     <div class="auth-form-container">
@@ -179,188 +179,98 @@
         </div>
       </div>
 
-      <!-- Heading -->
-      <div class="auth-header">
-        <h1 class="auth-heading-title">Chào mừng trở lại! 👋</h1>
-        <p class="auth-heading-desc">
-          Hệ thống tiếp đón y tế số & quản trị quan hệ bệnh nhân MedCare
-        </p>
-      </div>
+      <!-- Main login form wrapper — flex column, centered -->
+      <form class="lf-form" id="loginForm" onsubmit="handleLogin(event)" novalidate>
 
-      <!-- Role Switcher Tabs -->
-      <div class="auth-role-tabs">
-        <button
-          type="button"
-          class="auth-role-tab active"
-          id="roleTabPatient"
-          onclick="switchLoginRole('patient')"
-        >
-          <span class="tab-icon">👤</span> Dành cho Bệnh Nhân
-        </button>
-        <button
-          type="button"
-          class="auth-role-tab"
-          id="roleTabStaff"
-          onclick="switchLoginRole('staff')"
-        >
-          <span class="tab-icon">🩺</span> Cán Bộ Y Tế & Admin
-        </button>
-      </div>
+        <!-- ── FIELD GROUP ── -->
+        <div class="lf-field-group">
 
-      <!-- 1-Click Demo Accounts Quick Card -->
-      <div class="auth-demo-card">
-        <div class="auth-demo-header">
-          <span class="auth-demo-tag">⚡ Dùng Thử 1-Chạm (Click để tự điền)</span>
-          <span class="auth-demo-subtag">Demo Mode</span>
-        </div>
+          <!-- Heading -->
+          <div class="lf-heading">
+            <h1 class="lf-title">Chào mừng trở lại! 👋</h1>
+            <p class="lf-desc">Hệ thống tiếp đón y tế số &amp; quản trị quan hệ bệnh nhân MedCare</p>
+          </div>
 
-        <!-- Chips for Patient Mode -->
-        <div class="auth-demo-chips" id="demoChipsPatient">
-          <div class="auth-demo-chip" onclick="quickLogin('benhnhan@gmail.com')">
-            <div class="auth-demo-chip-info">
-              <div class="auth-demo-avatar" style="background: linear-gradient(135deg, #0F766E, #14B8A6);">A</div>
-              <div>
-                <div class="auth-demo-name">Nguyễn Văn An (Bệnh nhân)</div>
-                <div class="auth-demo-role">benhnhan@gmail.com · Mật khẩu: Patient@123</div>
-              </div>
+          <!-- ── Email Field ── -->
+          <div class="lf-field">
+            <label class="lf-label" for="loginEmail">
+              Email hoặc số điện thoại <span class="required">*</span>
+            </label>
+            <div class="lf-input-wrap">
+              <span class="lf-input-icon">✉</span>
+              <input
+                type="text"
+                id="loginEmail"
+                class="lf-input"
+                placeholder="staff@medcare.vn"
+                autocomplete="username"
+                required
+              >
             </div>
-            <button type="button" class="auth-demo-btn">Chọn ⚡</button>
           </div>
-        </div>
 
-        <!-- Chips for Staff Mode -->
-        <div class="auth-demo-chips" id="demoChipsStaff" style="display: none;">
-          <div class="auth-demo-chip" onclick="quickLogin('admin@medcare.vn')">
-            <div class="auth-demo-chip-info">
-              <div class="auth-demo-avatar" style="background: linear-gradient(135deg, #D97706, #F59E0B);">N</div>
-              <div>
-                <div class="auth-demo-name">Nguyễn Minh Nhân (Super Admin)</div>
-                <div class="auth-demo-role">admin@medcare.vn · Ban Giám đốc</div>
-              </div>
+          <!-- ── Password Field ── -->
+          <div class="lf-field">
+            <div class="lf-label-row">
+              <label class="lf-label" for="loginPassword">Mật khẩu <span class="required">*</span></label>
+              <a href="#" class="lf-forgot" onclick="showToast('Vui lòng liên hệ tổng đài xxxx-xxxx.','info');return false;">
+                Quên mật khẩu?
+              </a>
             </div>
-            <button type="button" class="auth-demo-btn">Chọn ⚡</button>
-          </div>
-
-          <div class="auth-demo-chip" onclick="quickLogin('manager@medcare.vn')">
-            <div class="auth-demo-chip-info">
-              <div class="auth-demo-avatar" style="background: linear-gradient(135deg, #0284C7, #38BDF8);">M</div>
-              <div>
-                <div class="auth-demo-name">BS. CKII Trần Thị Mai (Quản lý)</div>
-                <div class="auth-demo-role">manager@medcare.vn · Trưởng Khoa Khám</div>
-              </div>
+            <div class="lf-input-wrap">
+              <span class="lf-input-icon">🔒</span>
+              <input
+                type="password"
+                id="loginPassword"
+                class="lf-input"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="lf-toggle-pwd" onclick="togglePassword('loginPassword',this)" title="Hiện/Ẩn">👁</button>
             </div>
-            <button type="button" class="auth-demo-btn">Chọn ⚡</button>
           </div>
 
-          <div class="auth-demo-chip" onclick="quickLogin('staff@medcare.vn')">
-            <div class="auth-demo-chip-info">
-              <div class="auth-demo-avatar" style="background: linear-gradient(135deg, #7C3AED, #A78BFA);">H</div>
-              <div>
-                <div class="auth-demo-name">Lê Văn Hùng (CSKH / Kiosk)</div>
-                <div class="auth-demo-role">staff@medcare.vn · Tiếp đón trực tiếp</div>
-              </div>
-            </div>
-            <button type="button" class="auth-demo-btn">Chọn ⚡</button>
+          <!-- Remember me -->
+          <div class="lf-field lf-checkbox-row">
+            <label class="lf-checkbox-label">
+              <input type="checkbox" id="rememberMe" checked>
+              <span>Ghi nhớ phiên đăng nhập</span>
+            </label>
           </div>
-        </div>
-      </div>
 
-      <div class="auth-divider">
-        <span>hoặc đăng nhập bằng tài khoản</span>
-      </div>
-
-      <!-- Login Form -->
-      <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)" novalidate>
-
-        <div class="auth-input-group">
-          <label class="auth-label" for="loginEmail" id="labelLoginEmail">
-            Số điện thoại hoặc Email <span class="required">*</span>
-          </label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">✉</span>
-            <input
-              type="text"
-              id="loginEmail"
-              class="auth-input"
-              placeholder="Nhập 0912345678 hoặc email..."
-              autocomplete="username"
-              required
-            >
+          <!-- ── Submit ── -->
+          <div class="lf-field">
+            <button type="submit" class="lf-btn-submit" id="btnLogin">
+              🔐 Đăng nhập vào hệ thống
+            </button>
           </div>
-        </div>
 
-        <div class="auth-input-group">
-          <label class="auth-label" for="loginPassword">
-            Mật khẩu <span class="required">*</span>
-          </label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">🔒</span>
-            <input
-              type="password"
-              id="loginPassword"
-              class="auth-input"
-              placeholder="Nhập mật khẩu tài khoản"
-              autocomplete="current-password"
-              required
-            >
-            <button
-              type="button"
-              class="auth-input-toggle"
-              onclick="togglePassword('loginPassword', this)"
-              title="Hiện/Ẩn mật khẩu"
-            >👁</button>
+          <!-- ── Divider Or continue with ── -->
+          <div class="lf-separator"><span>hoặc tiếp tục với định danh quốc gia</span></div>
+
+          <!-- ── Social Buttons ── -->
+          <div class="lf-field lf-social-col">
+            <button type="button" class="lf-btn-social lf-btn-vneid" onclick="quickLogin('benhnhan@gmail.com')">
+              <span>🇻🇳</span> Đăng nhập qua Định danh VNeID
+            </button>
+            <button type="button" class="lf-btn-social lf-btn-google" onclick="showToast('Đang kết nối Google y tế...','info')">
+              <span>🌐</span> Đăng nhập với Google
+            </button>
           </div>
-        </div>
 
-        <!-- Options row -->
-        <div class="auth-row-options">
-          <label class="auth-checkbox-label">
-            <input type="checkbox" id="rememberMe" checked>
-            <span>Ghi nhớ phiên đăng nhập</span>
-          </label>
-          <a href="#" class="auth-forgot-link" onclick="showToast('Vui lòng liên hệ tổng đài xxxx-xxxx hoặc dùng tài khoản Demo.', 'info'); return false;">
-            Quên mật khẩu?
-          </a>
-        </div>
+          <!-- ── Description / Disclaimer ── -->
+          <p class="lf-disclaimer">
+            Bằng cách đăng nhập, bạn đồng ý với
+            <a href="#">Điều khoản sử dụng</a> và
+            <a href="#">Chính sách bảo mật</a> MedCare.<br>
+            Học phần Thiết kế Web — LHU. Hotline: <strong>xxxx-xxxx</strong>.
+          </p>
 
-        <!-- Submit Button -->
-        <button type="submit" class="auth-submit-btn" id="btnLogin">
-          <span>🔐</span> Đăng nhập vào hệ thống
-        </button>
+        </div>
+        <!-- /lf-field-group -->
 
       </form>
-
-      <!-- National VNeID & Social Identification -->
-      <div class="auth-divider" style="margin-top: 22px;">
-        <span>hoặc tiếp tục với định danh quốc gia</span>
-      </div>
-
-      <div class="auth-social-wrap">
-        <button
-          type="button"
-          class="btn-vneid"
-          onclick="quickLogin('benhnhan@gmail.com')"
-          title="Đăng nhập tự động với tài khoản Bệnh nhân đã xác thực VNeID"
-        >
-          <span style="font-size: 16px;">🇻🇳</span> Đăng nhập qua Định danh điện tử VNeID
-        </button>
-
-        <button
-          type="button"
-          class="btn-social-outline"
-          onclick="showToast('Đang kết nối cổng xác thực Google y tế an toàn...', 'info')"
-        >
-          <span style="font-size: 15px;">🌐</span> Đăng nhập với tài khoản Google
-        </button>
-      </div>
-
-      <!-- Legal / Academic Disclaimer -->
-      <div class="auth-disclaimer">
-        Bằng cách đăng nhập, bạn đồng ý với
-        <a href="#">Điều khoản sử dụng</a> và
-        <a href="#">Chính sách bảo mật y tế</a> MedCare.<br>
-        Học phần Thiết kế Web — Trường Đại học Lạc Hồng (LHU). Hotline: <strong>xxxx-xxxx</strong>.
-      </div>
 
     </div>
   </div>

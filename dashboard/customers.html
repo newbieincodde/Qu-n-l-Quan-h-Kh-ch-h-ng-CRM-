@@ -20,7 +20,7 @@
     <div class="page-header">
       <div class="page-header-left">
         <h1 class="page-title">Hồ Sơ & Danh Sách Bệnh Nhân</h1>
-        <p class="page-subtitle">Quản lý 50 hồ sơ bệnh nhân, phân hạng giá trị giao dịch (Đồng - Bạc - Vàng)</p>
+        <p class="page-subtitle">Quản lý 200+ hồ sơ bệnh nhân, phân hạng giá trị giao dịch (Đồng - Bạc - Vàng) &amp; 320+ toa thuốc điện tử</p>
       </div>
       <div class="page-header-actions">
         <button class="btn btn-outline" id="btnExportCSV">📥 Xuất file CSV</button>
@@ -43,7 +43,12 @@
       <div class="rank-stat-card" style="border-top:3px solid #b77945;">
         <div class="rank-stat-icon">🥉</div>
         <div class="rank-stat-count" id="statBronzeCount">0</div>
-        <div class="rank-stat-label">Hạng Đồng (< 5.000.000 ₫)</div>
+        <div class="rank-stat-label">Hạng Đồng (&lt; 5.000.000 ₫)</div>
+      </div>
+      <div class="rank-stat-card" style="border-top:3px solid #0d9488;">
+        <div class="rank-stat-icon">💊</div>
+        <div class="rank-stat-count" id="statRxCount">0</div>
+        <div class="rank-stat-label">Toa Thuốc Điện Tử (EHR)</div>
       </div>
     </div>
 
@@ -115,7 +120,7 @@
 
       <!-- Pagination -->
       <div class="pagination-wrap">
-        <div id="paginationInfo">Hiển thị 1 – 10 trên tổng số 50 bệnh nhân</div>
+        <div id="paginationInfo">Hiển thị 1 – 10 trên tổng số 200 bệnh nhân</div>
         <div class="pagination" id="paginationControls"></div>
       </div>
     </div>

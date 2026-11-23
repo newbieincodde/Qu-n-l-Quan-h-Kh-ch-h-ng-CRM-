@@ -41,10 +41,15 @@ function updateRankStats() {
   const elG = document.getElementById('statGoldCount');
   const elS = document.getElementById('statSilverCount');
   const elB = document.getElementById('statBronzeCount');
+  const elRx = document.getElementById('statRxCount');
 
   if (elG) elG.textContent = stats.gold;
   if (elS) elS.textContent = stats.silver;
   if (elB) elB.textContent = stats.bronze;
+  if (elRx) {
+    const rxList = typeof getPrescriptions === 'function' ? getPrescriptions() : [];
+    elRx.textContent = rxList.length;
+  }
 }
 
 function populateServiceDropdowns() {
@@ -544,13 +549,32 @@ function renderEHRModalContent() {
     }
   ];
 
-  // Sample prescriptions
-  const prescriptions = [
-    { name: 'Amlodipine 5mg', dose: '1 viên / ngày (Sáng sau ăn)', qty: '30 viên', note: 'Hạ áp mạch vành' },
-    { name: 'Losartan Potassium 50mg', dose: '1 viên / ngày (Sáng)', qty: '30 viên', note: 'Ổn định huyết áp' },
-    { name: 'Panadol Extra 500mg', dose: '1 viên khi đau đầu (cách 6h)', qty: '10 viên', note: 'Giảm đau nhẹ' },
-    { name: 'Omega-3 Fish Oil 1000mg', dose: '1 viên / ngày (Tối)', qty: '60 viên', note: 'Bổ trợ tim mạch' }
-  ];
+  // Lấy danh sách toa thuốc thật của bệnh nhân từ localStorage (hàm getPrescriptionsByPatient)
+  let prescriptions = [];
+  if (typeof getPrescriptionsByPatient === 'function') {
+    prescriptions = getPrescriptionsByPatient(p.id);
+  }
+  if (!prescriptions || prescriptions.length === 0) {
+    prescriptions = [
+      {
+        id: `RX2026-${(p.id.replace(/\D/g, '') || '001').padStart(4, '0')}`,
+        patientId: p.id,
+        patientName: p.name,
+        diagnosis: 'Z00.0 — Khám sức khỏe tổng quát định kỳ & Bổ sung vi chất',
+        department: 'Nội Khoa Tổng Quát',
+        doctor: 'BS. CKII Nguyễn Minh Nhân',
+        date: p.lastContact || '15/11/2026',
+        medicines: [
+          { name: 'Enervon-C (Vitamin C 500mg + B Complex)', dose: 'Uống 1 viên / ngày (Sáng sau ăn)', qty: '30 viên', note: 'Bổ sung vitamin, tăng cường đề kháng' },
+          { name: 'Canxi Nano + Vitamin D3 & MK7', dose: 'Uống 1 viên / ngày (Sáng sau ăn)', qty: '30 viên', note: 'Hỗ trợ mật độ xương' },
+          { name: 'Omega-3 Dầu Cá Hồi Tinh Khiết 1000mg', dose: 'Uống 1 viên / ngày (Trưa sau ăn)', qty: '60 viên', note: 'Bổ trợ tim mạch và thị lực' }
+        ],
+        advice: 'Ăn uống đủ chất, hạn chế đồ cay nóng dầu mỡ, tái khám định kỳ sau 6 tháng.',
+        totalAmount: 450000,
+        status: 'Đã cấp phát'
+      }
+    ];
+  }
 
   // Interactions history
   let interactions = [];
@@ -660,7 +684,7 @@ function renderEHRModalContent() {
         📋 Lịch Sử Khám & ICD-10
       </button>
       <button type="button" class="ehr-tab-btn ${activeEHRTab === 'prescriptions' ? 'active' : ''}" onclick="switchEHRTab('prescriptions')">
-        💊 Đơn Thuốc & Toa Thuốc Điện Tử
+        💊 Đơn Thuốc & Toa Thuốc Điện Tử (${prescriptions.length})
       </button>
       <button type="button" class="ehr-tab-btn ${activeEHRTab === 'care' ? 'active' : ''}" onclick="switchEHRTab('care')">
         💬 Nhật Ký Chăm Sóc & Tái Khám (${interactions.length})
@@ -702,28 +726,52 @@ function renderEHRModalContent() {
     <!-- Tab 2: Prescriptions -->
     ${activeEHRTab === 'prescriptions' ? `
       <div class="ehr-tab-content">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Tên Thuốc / Hàm Lượng</th>
-                <th>Liều Dùng & Hướng Dẫn</th>
-                <th>Số Lượng</th>
-                <th>Chỉ Định / Mục Đích</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${prescriptions.map(rx => `
-                <tr>
-                  <td><strong style="color:#0f766e;">${rx.name}</strong></td>
-                  <td>${rx.dose}</td>
-                  <td><strong>${rx.qty}</strong></td>
-                  <td><span style="font-size:12px; color:#64748b;">${rx.note}</span></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+        ${prescriptions.map(rx => `
+          <div class="ehr-prescription-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <span style="font-weight:700; color:#0f766e; font-size:14px;">🧾 Mã Toa: ${rx.id}</span>
+                <span style="color:#64748b; font-size:12.5px; margin-left:10px;">📅 Ngày kê: <strong>${rx.date}</strong></span>
+                <span style="color:#64748b; font-size:12.5px; margin-left:10px;">👨‍⚕️ ${rx.doctor || 'BS. Điều Trị'} (${rx.department || 'Đa Khoa'})</span>
+              </div>
+              <span class="badge-status" style="background:#ccfbf1; color:#0f766e; font-weight:600; font-size:12px; padding:3px 10px; border-radius:6px;">
+                ✓ ${rx.status || 'Đã cấp phát'}
+              </span>
+            </div>
+
+            <div style="font-size:13px; margin-bottom:12px; color:#1e293b;">
+              <strong>Chẩn đoán ICD-10:</strong> <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-weight:600;">${rx.diagnosis}</span>
+            </div>
+
+            <div class="table-wrap" style="background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:12px;">
+              <table style="font-size:13px;">
+                <thead>
+                  <tr>
+                    <th>Tên Thuốc / Hàm Lượng</th>
+                    <th>Liều Dùng & Hướng Dẫn</th>
+                    <th>Số Lượng</th>
+                    <th>Chỉ Định / Mục Đích</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${(rx.medicines || []).map(m => `
+                    <tr>
+                      <td><strong style="color:#0f766e;">${m.name}</strong></td>
+                      <td>${m.dose}</td>
+                      <td><strong>${m.qty}</strong></td>
+                      <td><span style="font-size:12px; color:#64748b;">${m.note}</span></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:#475569; flex-wrap:wrap; gap:8px; border-top:1px dashed #e2e8f0; padding-top:10px;">
+              <div><strong>💡 Lời dặn của bác sĩ:</strong> ${rx.advice || 'Uống thuốc đúng giờ và tái khám theo hẹn.'}</div>
+              ${rx.totalAmount ? `<div style="font-weight:700; color:#0f172a; font-size:13px;">Tiền thuốc: ${rx.totalAmount.toLocaleString('vi-VN')} ₫</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
       </div>
     ` : ''}
 

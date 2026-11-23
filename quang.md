@@ -58,4 +58,4 @@ Một trang CRM hoàn chỉnh cần cấu trúc xoay quanh 5 phân hệ chính:
    * Thiết lập các kịch bản tự động nhắc việc (Workflow Automation).
 3. **Giai đoạn 3 (Mở rộng & AI):**
    * Tích hợp đa kênh (Zalo OA / Tổng đài VoIP).
-   * Xây dựng hệ thống báo cáo chuyên sâu và đưa các tính năng trợ lý AI vào vận hành.
+   * Xây dựng hệ thống báo cáo chuyên sâu và đưa các tính năng trợ lý AI vào vận hành
